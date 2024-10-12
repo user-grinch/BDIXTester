@@ -311,7 +311,7 @@ public:
         if (out) {
             fclose(out);
         }
-        ShowError("Scan finished.");
+        currentUrl = "Scan finished.";
         testInProgress = false;
     }
 
