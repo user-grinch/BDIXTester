@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch App",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/ChelzApp/bin/Debug-windows-x86_64/ChelzApp/ChelzApp.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "F:/GTA3/",
+            "environment": [],
+            "console": "internalConsole"
+        },
+        {
+            "name": "Attach",
+            "type": "cppvsdbg",
+            "request": "attach",
+            "processId": "${command:pickProcess}"
+        }
+    ]
+}
