@@ -311,6 +311,7 @@ public:
         if (out) {
             fclose(out);
         }
+        ShowError("Scan finished.");
         testInProgress = false;
     }
 
