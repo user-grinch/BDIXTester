@@ -287,7 +287,7 @@ public:
         }
 
         FILE *out = nullptr;
-        fopen_s(&out, "valid.db", "w");
+        fopen_s(&out, "valid.db", "wb");
         if (!out) {
             ShowError("Failed to create valid.db");
             return;
@@ -295,8 +295,7 @@ public:
 
         for (size_t i = 0; i < count; ++i) {
             if (stopTest) {
-                testInProgress = false;
-                return;  
+                break;  
             }
 
             currentUrl = bdixList[i];
