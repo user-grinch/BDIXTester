@@ -65,7 +65,7 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
     static void *popupFunc = nullptr;
     static Chelz::Specification Spec;
     Spec.Name = L"BDIX Tester";
-    Spec.Size = {400, 550};
+    Spec.Size = {350, 500};
     popupFunc = WelcomePopup;
     Spec.MenuBarFunc = [&handler](){
         if (ImGui::BeginMenu("About")) {

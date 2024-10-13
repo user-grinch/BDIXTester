@@ -13,7 +13,7 @@ private:
     int timeoutMs;
     std::vector<std::string> bdixList;
     std::vector<std::string> validBdixList;
-    std::string currentUrl;
+    std::string progressBarText;
     float currentProgress;
     std::atomic<bool> testInProgress;
     std::atomic<bool> stopTest;
@@ -47,11 +47,11 @@ public:
         float stopWidth = buttonTextSize.x + buttonPadding.x * 2.0f;
         float stopHeight = buttonTextSize.y + buttonPadding.y * 2.0f;
         float progressBarWidth = windowSize.x - stopWidth - ImGui::GetStyle().ItemSpacing.x; 
-        ImGui::ProgressBar(currentProgress, ImVec2(progressBarWidth, stopHeight), currentUrl.c_str());
+        ImGui::ProgressBar(currentProgress, ImVec2(progressBarWidth, stopHeight), progressBarText.c_str());
         ImGui::SameLine();
         if (ImGui::Button(buttonText, ImVec2(stopWidth, stopHeight))) {
             stopTest = true;
-            currentUrl = "Stopped by User";
+            progressBarText = "Stopped by User";
             currentProgress = 0.0f;
         }
 
@@ -112,10 +112,9 @@ public:
                  filter.InputBuf, IM_ARRAYSIZE(filter.InputBuf));
             filter.Build();
 
-            if (ImGui::BeginTable("URLTable", 3, ImGuiTableFlags_Sortable | ImGuiTableFlags_Borders | ImGuiTableFlags_ScrollY | ImGuiTableFlags_RowBg)) {
+            if (ImGui::BeginTable("URLTable", 2, ImGuiTableFlags_Sortable | ImGuiTableFlags_Borders | ImGuiTableFlags_ScrollY | ImGuiTableFlags_RowBg)) {
                 ImGui::TableSetupColumn("URL", ImGuiTableColumnFlags_WidthStretch | ImGuiTableColumnFlags_DefaultSort);
-                ImGui::TableSetupColumn("Type", ImGuiTableColumnFlags_WidthFixed, ImGui::GetWindowContentRegionWidth() * 0.125f); // Server Type column
-                ImGui::TableSetupColumn("Action", ImGuiTableColumnFlags_WidthFixed, ImGui::GetWindowContentRegionWidth() * 0.125f); // Action column for buttons
+                ImGui::TableSetupColumn("Type", ImGuiTableColumnFlags_WidthFixed, ImGui::GetWindowContentRegionWidth() * 0.15f); // Server Type column
                 ImGui::TableSetupScrollFreeze(0, 1);
                 ImGui::TableHeadersRow();
 
@@ -149,13 +148,14 @@ public:
                         const std::string& url = pVec->at(i);
                         ImGui::TableNextRow();
                         ImGui::TableNextColumn();
-                        ImGui::Text("%s", url.c_str());
-                        ImGui::TableNextColumn();
-                        ImGui::Text("%s", GetServerType(url).c_str());
-                        ImGui::TableNextColumn();
-                        if (ImGui::Button(("Open##" + std::to_string(i)).c_str())) {
+                        if (ImGui::MenuItem(url.c_str())) {
                             ShellExecuteA(0, "open", url.c_str(), 0, 0, SW_SHOWNORMAL);
                         }
+                        if (ImGui::IsItemHovered()) {
+                            ImGui::SetTooltip("View server");
+                        }
+                        ImGui::TableNextColumn();
+                        ImGui::Text("%s", GetServerType(url).c_str());
                     }
                 }
 
@@ -298,20 +298,20 @@ public:
                 break;  
             }
 
-            currentUrl = bdixList[i];
+            progressBarText =  "Scanning " + bdixList[i] + "...";
             currentProgress = static_cast<float>(i + 1) / count;
 
-            if (CheckURL(currentUrl)) {
-                validBdixList.push_back(currentUrl);
+            if (CheckURL(bdixList[i])) {
+                validBdixList.push_back(bdixList[i]);
                 if (out) {
-                    fprintf(out, "%s\n", currentUrl.c_str());
+                    fprintf(out, "%s\n", bdixList[i].c_str());
                 }
             }
         }
         if (out) {
             fclose(out);
         }
-        currentUrl = "Scan finished.";
+        progressBarText = "Scan finished.";
         testInProgress = false;
     }
 
